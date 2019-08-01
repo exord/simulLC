@@ -5,7 +5,7 @@ Created on Thu May 16 11:11:17 2019
 
 @author: rodrigo
 """
-
+import numpy as np
 from MCMC import priors as priormodule
 
 class Parameters(object):
@@ -58,3 +58,31 @@ class Parameters(object):
             self.draws[param] = self.priordict[param].rvs(size=n)
         return
     
+    
+    def to_pastis(self):
+        """
+        Prepare dictonary to pass to PASTIS classes.
+        """
+        if not hasattr(self, "draws"):
+            raise ValueError('Draws from the priors are needed. Run draw '
+                             'metod')
+        
+        par1 = []
+
+        # Dictionary with one dictionary per object
+        ppars = dict.fromkeys(np.unique(par1), {})
+        ppars = {}
+
+        for par in self.draws:
+            par_split = par.split('_')
+            if len(par_split) != 2:
+                raise ValueError("Parameter {} cannot be converted to PASTIS "
+                                 "format".format(par))
+                
+            if par_split[0] not in ppars:
+                # Initialise dictionary
+                ppars[par_split[0]] = {}
+                
+            ppars[par_split[0]][par_split[1]] = self.draws[par]
+
+        return ppars
