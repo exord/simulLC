@@ -8,24 +8,28 @@ Created on Thu May 16 10:49:39 2019
 import sys
 import os
 import datetime
-import imp
 import numpy as np
+import importlib.util
 
-import tools
-import parameters
-import assertions
+from pastisML import tools
+from pastisML import parameters
+from pastisML import assertions
 
 # =============================================================================
 # Read configuration file and test compliance
 # =============================================================================
 if len(sys.argv) < 2:
     infile = 'test_BEB.py'
+    scriptpath = os.path.split(os.path.realpath(__file__))[0]
+    inputfile = os.path.join(scriptpath, 'inputs', infile)
 else:
-    infile = sys.argv[1]
+    inputfile = sys.argv[1]
     
-scriptpath = os.path.split(os.path.realpath(__file__))[0]
-inputfile = os.path.join(scriptpath, 'inputs', infile)
-inconfig = imp.load_source('inconfig', inputfile)
+spec = importlib.util.spec_from_file_location('inconfig', inputfile)
+inconfig = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(inconfig)
+
+# inconfig = imp.load_source('inconfig', inputfile)
 
 # Test that necessary dictionaries are defined in input file.
 assertions.test_module(inconfig)
