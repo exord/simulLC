@@ -1,6 +1,10 @@
 # simulLC
 Code to produce simulated lightcurves based on PASTIS
 
+<span style="color:red">This project was abandoned; please see htttps://github.com/exord/pastisML-tess instead</span>.
+
+
+
 ## Dependency
 The package uses the PASTIS package (not public yet; sorry!)
 
